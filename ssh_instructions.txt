@@ -1,0 +1,7 @@
+1) 
+ssh -i <path_to_pem> -N -f -L 9890:localhost:8888 ubuntu@ec2-18-138-250-240.ap-southeast-1.compute.amazonaws.com
+
+2) browse:
+localhost:9890
+
+3) enter password

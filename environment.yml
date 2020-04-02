@@ -1,0 +1,16 @@
+name: covid
+channels:
+  - javascript
+dependencies:
+  - python=3.7
+  - pip
+  - joblib
+  - pandas
+  - numpy
+  - scikit-learn
+  - matplotlib
+  - pip:
+        - jupyterlab
+        - plotly
+        - pymongo
+        - schedule
