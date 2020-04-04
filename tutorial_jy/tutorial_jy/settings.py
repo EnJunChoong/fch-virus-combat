@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'tutorial_jy.spiders'
 
 MONGO_URI = "localhost:27017"
 MONGO_DATABASE = "news"
-SEBENARNYA_COLLECTION = "sebenarnya_v1"
+SEBENARNYA_COLLECTION = "sebenarnya_v1_test2"
 RECRAWL_FREQUENCY = 30 # after 30 seconds crawl the same page again
 # LIMIT_PAGE = 3
 

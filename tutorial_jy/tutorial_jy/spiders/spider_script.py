@@ -73,3 +73,14 @@ class MySpider(scrapy.Spider):
         logging.info('starting a crawl again!')
         self.crawler.engine.schedule(Request(self.start_urls[0], dont_filter=False), spider)
         raise DontCloseSpider
+        
+        
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+
+process = CrawlerProcess(get_project_settings())
+process.crawl(MySpider)
+process.start() # the script will block here until all crawling jobs are finished
+print("Done")
+print("Done")
+print("Done")
