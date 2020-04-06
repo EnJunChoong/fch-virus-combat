@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for ScrappyEJ project
+# Scrapy settings for splash project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,32 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'ScrappyEJ'
+BOT_NAME = 'splash'
 
-SPIDER_MODULES = ['ScrappyEJ.spiders']
-NEWSPIDER_MODULE = 'ScrappyEJ.spiders'
+SPIDER_MODULES = ['splash.spiders']
+NEWSPIDER_MODULE = 'splash.spiders'
 
+# Database Settig
+MONGO_URI = "localhost:27017"
+MONGO_DATABASE = "news"
+THESTAR_COLLECTION_FAKE = "thestar_v1_test1"
+THESTAR_COLLECTION_COVID = "thestar_v1_covid"
+
+#ScrapySplash settings
+# SPLASH_URL = 'http://127.0.0.1:8050'
+SPLASH_URL = 'http://localhost:8050'
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+}
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'ScrappyEJ (+http://www.yourdomain.com)'
+#USER_AGENT = 'splash (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +65,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'ScrappyEJ.middlewares.ScrappyejSpiderMiddleware': 543,
+#    'splash.middlewares.SplashSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'ScrappyEJ.middlewares.ScrappyejDownloaderMiddleware': 543,
+#    'splash.middlewares.SplashDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +83,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'ScrappyEJ.pipelines.ScrappyejPipeline': 300,
+#    'splash.pipelines.SplashPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

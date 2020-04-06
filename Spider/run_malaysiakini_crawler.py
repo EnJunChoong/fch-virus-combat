@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from spider_sebenarnya import MySpider
+from spider_malaysiakini import MKiniSpider
 
 from twisted.internet import reactor
 from twisted.internet.task import deferLater
@@ -24,6 +24,6 @@ def _crawl(result, spider):
     deferred.addCallback(_crawl, spider)
     return deferred
 
-_crawl(None, MySpider) # Infinite crawl
+_crawl(None, MKiniSpider) # Infinite crawl
 process.start()
 

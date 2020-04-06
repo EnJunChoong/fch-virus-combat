@@ -11,7 +11,8 @@ from dateutil import parser
 class Processing:
     '''
     This class takes in a dictionary from mongodb News collection and parse the 
-    content into a formatted json to be used for the rest API
+    content into a formatted json to be usa
+    ed for the rest API
     '''
     def __init__(self, db_dict:dict):
         '''take input of dict retrieved from mongoDB

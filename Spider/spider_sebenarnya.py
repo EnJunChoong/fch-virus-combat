@@ -1,50 +1,29 @@
 import scrapy
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
-from lxml import html
+import pymongo
+import logging
+import time
+from scrapy import signals, Request
+from scrapy.exceptions import DontCloseSpider, CloseSpider
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 
-class SebenarCovidSpider(scrapy.Spider):
-    name = "sebenar-covid"
-    allowed_domains = ["https://sebenarnya.my/"]
-
-    def start_requests(self):
-        urls = [
-            'https://sebenarnya.my/category/novel-coronavirus-2019-ncov',
-        ]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
-
-    def parse(self, response):
-        link = response.url
-        filename = 'quotes-%s.html' % page
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
-        
-        
-    def parse(self, response):
-        articles_page_links = response.css('.author + a')
-        yield from response.follow_all(articles_page_links, self.parse_articles)
-
-        pagination_links = response.css('li.next a')
-        yield from response.follow_all(pagination_links, self.parse)
-
-        
-        
-        
-    def parse_articles(self, response):
-        def extract_with_css(query):
-            return response.css(query).get(default='').strip()
-
-        yield {
-            'name': extract_with_css('h3.author-title::text'),
-            'birthdate': extract_with_css('.author-born-date::text'),
-            'bio': extract_with_css('.author-description::text'),
-        }
-
-    start_urls = ['https://sebenarnya.my/category/novel-coronavirus-2019-ncov/page/20']
+def check_to_scrap(url, coll):
+    x = coll.find_one({'url': url}, { "_id": 1})
+    if x is None:
+        return True
+    else: 
+        return False
+    
+class MySpider(scrapy.Spider):
+    name = 'malaysiakini_v1'
+    start_urls = ['https://www.malaysiakini.com/stories/covid19']
+    check_pg = 0
     pg = 0
     num = 0
+    MAX_CHECK_PAGE = 3
+    MONGO_URI = "localhost:27017"
+    MONGO_DATABASE = "news"
+    SEBENARNYA_COLLECTION = "malaysiakini_v1"
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
@@ -53,16 +32,24 @@ class SebenarCovidSpider(scrapy.Spider):
         cls.mongo_uri=crawler.settings.get('MONGO_URI'),
         cls.mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
         cls.collection_name = crawler.settings.get("SEBENARNYA_COLLECTION")
-        cls.recrawl_freq = crawler.settings.get("RECRAWL_FREQUENCY")
                 
+        cls.mongo_uri=cls.MONGO_URI
+        cls.mongo_db=cls.MONGO_DATABASE
+        cls.collection_name = cls.SEBENARNYA_COLLECTION
+        
         cls.client = pymongo.MongoClient(cls.mongo_uri)
         cls.coll = cls.client[cls.mongo_db][cls.collection_name]
         
         return spider
     
     def parse(self, response):
-        news_links = response.css('div.td-pb-span8 .entry-title a::attr(href)').getall() 
+        news_links = response.css('div.news a::attr(href)').getall() 
         news_links_filtered = [j for j in news_links if check_to_scrap(j, self.coll)]
+        if len(news_links_filtered) == 0:
+            self.check_pg += 1
+            if self.check_pg >= self.MAX_CHECK_PAGE:
+                raise CloseSpider #Exception("End")
+                
         yield from response.follow_all(news_links_filtered, self.parse_news)
 
         pagination_links = response.css('.page-nav a')
@@ -73,13 +60,15 @@ class SebenarCovidSpider(scrapy.Spider):
         elif len(pagination_links) == 2:
             yield from response.follow_all(pagination_links[1:2], self.parse)
             self.pg += 1
+        else:
+            print("End:", response.url)
 
     def parse_news(self, response):
         self.num += 1
         def extract_with_css(query):
             return response.css(query).get(default='').strip()
         
-        yield {
+        item = {
             'date': response.css('div.td-post-header time.entry-date::attr(datetime)').get(),
             'title': extract_with_css('.entry-title::text'),
             'content_html': response.css('div.td-post-content').getall(),
@@ -94,3 +83,6 @@ class SebenarCovidSpider(scrapy.Spider):
             'dep_img_src': response.css('div.td-post-content img::attr(src)').getall() #deprecated
 
             }
+        self.coll.insert_one(dict(item))
+        yield {}
+        
