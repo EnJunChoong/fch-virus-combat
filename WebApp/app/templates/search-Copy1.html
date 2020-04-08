@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/main.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/main.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/skeleton.css') }}"  rel="stylesheet" />
+  </head>
+  <body>
+    <div class="row">
+        <div class="four columns"></div>
+        <h4 class="eight columns">UniJagung Fake News Search Engine </h1>
+    </div>
+    <div class="row">
+      <form action="/search" method="post">
+        <div class="four columns"></div>
+<!--         <div class="four columns"> -->
+            <input class="u-full-width six columns" id="search" name="keyword" type="text" placeholder="Keywords/title/URL of news" />
+<!--         </div> -->
+        <div class="two columns">
+            <button class="button-primary" type="submit">SEARCH</button>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+        <div class="four columns"></div>
+        <div class="four columns output">Search results for: {{dp.get("keyword")}} </div>
+    </div>
+    
+    {%for i in range(0, len)%} 
+    <div class="row">
+        <div class="four columns"></div>
+        <div class="four columns output"> {{ dp.get("output")}} </div>
+    </div>
+    {%endfor}
+    
+    <script src="js/extention/choices.js"></script>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
