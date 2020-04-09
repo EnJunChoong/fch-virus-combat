@@ -16,8 +16,7 @@ def check_to_scrap(url, coll):
     
 class MySpider(scrapy.Spider):
     name = 'sebenarnya_v2'
-    start_urls = ['https://sebenarnya.my/category/novel-coronavirus-2019-ncov/']
-    #     start_urls = ['https://sebenarnya.my/category/novel-coronavirus-2019-ncov/page/18']
+    start_urls = ['https://www.malaysiakini.com/stories/covid19']
     check_pg = 0
     pg = 0
     num = 0
@@ -44,7 +43,7 @@ class MySpider(scrapy.Spider):
         return spider
     
     def parse(self, response):
-        news_links = response.css('div.td-pb-span8 .entry-title a::attr(href)').getall() 
+        news_links = response.css('div.news a::attr(href)').getall() 
         news_links_filtered = [j for j in news_links if check_to_scrap(j, self.coll)]
         if len(news_links_filtered) == 0:
             self.check_pg += 1

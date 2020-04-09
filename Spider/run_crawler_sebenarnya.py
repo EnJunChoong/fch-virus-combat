@@ -1,9 +1,10 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from spider_sebenarnya import MySpider
-
+from spider_sebenarnya import SebenarnyaSpider
 from twisted.internet import reactor
 from twisted.internet.task import deferLater
+
+from settings import Settings
 
 def crash(failure):
     print('oops, spider crashed')
@@ -14,7 +15,7 @@ def sleep(self, *args, seconds):
     return deferLater(reactor, seconds, lambda: None)
 
 process = CrawlerProcess()
-wait_time = 60*10
+wait_time = Settings.SEBENARNYA_CRAWL_WAIT_TIME # 60*10
 
 def _crawl(result, spider):
     deferred = process.crawl(spider)
@@ -24,6 +25,6 @@ def _crawl(result, spider):
     deferred.addCallback(_crawl, spider)
     return deferred
 
-_crawl(None, MySpider) # Infinite crawl
+_crawl(None, SebenarnyaSpider) # Infinite crawl
 process.start()
 
