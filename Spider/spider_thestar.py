@@ -1,23 +1,29 @@
-import scrapy
-import pymongo
 import os
+import time
+import datetime
+import pymongo
+import scrapy
+import logging
+from scrapy import signals, Request
+from scrapy.exceptions import DontCloseSpider, CloseSpider
 from scrapy_splash import SplashRequest
 
-class NewsSpider(scrapy.Spider):
-    name = "splash"
+from helper import check_to_scrap
+from settings import Settings
+
+
+class TheStarSpider(scrapy.Spider):
+    name = "TheStar"
     domain = 'https://www.thestar.com.my'
-    MONGO_URI = "localhost:27017"
-    MONGO_DATABASE = "news"
-    THESTAR_COLLECTION_COVID = "thestar_v1_covid"
+
+    MONGO_URI = Settings.MONGO_URI
+    MONGO_DATABASE = Settings.MONGO_DB
+    THESTAR_COLLECTION_COVID = Settings.THESTAR_RAW_MONGO_COLLECTION
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        spider = super(NewsSpider, cls).from_crawler(crawler, *args, **kwargs)
+        spider = super(TheStarSpider, cls).from_crawler(crawler, *args, **kwargs)
         
-        cls.mongo_uri=crawler.settings.get('MONGO_URI'),
-        cls.mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
-        cls.collection_name = crawler.settings.get("THESTAR_COLLECTION_COVID")
-                
         cls.mongo_uri=cls.MONGO_URI
         cls.mongo_db=cls.MONGO_DATABASE
         cls.collection_name = cls.THESTAR_COLLECTION_COVID
@@ -36,7 +42,7 @@ class NewsSpider(scrapy.Spider):
         script = """
             function main(splash, args)
                 assert(splash:go(args.url))
-                assert(splash:wait(01))   
+                assert(splash:wait(5))   
                 while not (splash:select('div[class*=button-view][style*="display: none;"]'))
                     do
                         local loadmore = splash:select('div.button-view.btnLoadMore')
@@ -63,10 +69,15 @@ class NewsSpider(scrapy.Spider):
         body = response.css('div.sub-section-list')
         articles = body.css('div.row.list-listing')
         article_links = [article.css('h2.f18').css('a::attr(href)').get() for article in articles]
+        article_links_filtered = [j for j in article_links if check_to_scrap(j, self.coll)]
+        print("Filtered total:")
+        print(len(article_links_filtered))
+        if len(article_links_filtered) == 0:
+            raise CloseSpider 
 
         # Set to crawl three links only for debugging and setup
         # yield from response.follow_all(article_links[:3], self.parse_news)
-        for url in article_links:
+        for url in article_links_filtered:
             yield SplashRequest(
                 url=self.domain+url, callback=self.parse_news,
                 args = {
@@ -87,11 +98,23 @@ class NewsSpider(scrapy.Spider):
         #     f.write(date)
         # self.log('Saved file %s' % filename)
         
+        
         result_dict = {
-            # 'title': title,
-            # 'content_html': content_html,
-            'full_html': body,
+            'scrape_date': datetime.datetime.today(),
+            'news_date': '',
+            'title': '',
+            'category': '',
+            'topic': '',
+            'content_text': '',
+            'images': [],
+            'audio': [],
+            'fact_src': '',
+            'label': '',
+            'confidence': '',
             'url': response.url,
+            'news_vendor': self.name,
+            'content_html': body,
+            'meta_full_html': response.text
         }
         
         self.coll.insert_one(result_dict)

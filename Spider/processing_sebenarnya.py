@@ -27,15 +27,21 @@ def updater_processing_sebenarnya():
     x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(300))
     for j in x:
         raw_dict = j.copy()
-        pro_dict = Processing_Sebenarnya(raw_dict).pro.copy()
+        
+        try:
+            pro_dict = Processing_Sebenarnya(raw_dict).pro.copy()
 
-        # Update raw collection with processed_date
-        update = { "$set": { "processed_date": datetime.datetime.today() } }
-        raw_coll.update_one(j, update)
+            # Update raw collection with processed_date
+            update = { "$set": { "processed_date": datetime.datetime.today() } }
+            raw_coll.update_one(j, update)
 
-        # Insert processed dict to processed collection
-        pro_coll.insert_one(pro_dict)
-
+            # Insert processed dict to processed collection
+            pro_coll.insert_one(pro_dict)
+            
+        except Exception as err:
+            print("Error at processing:", raw_dict.get("url"))
+            print(err)
+            
     print("Done: Processing SEBENARNYA.", len(x))
 
 
@@ -58,6 +64,12 @@ class Processing_Sebenarnya:
         
         # create processed dict
         self.run_processed() # self.pro
+        
+        try:
+            self.pro.pop("content_html")    
+            self.pro.pop("meta_full_html")    
+        except KeyError:
+            print("Key not found")   
         
     def get_label_map(self):
         label_map = {

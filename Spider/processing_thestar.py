@@ -1,17 +1,21 @@
 import re
+import json
 import pymongo
 import pandas as pd
 import numpy as np
+import requests
+import collections
 import time
 import datetime
 from bs4 import BeautifulSoup
+from dateutil import parser
 from settings import Settings
 
-def updater_processing_harianmetro():
+def updater_processing_thestar():
     MONGO_URI = Settings.MONGO_URI
     MONGO_DB = Settings.MONGO_DB
-    RAW_COLLECTION = Settings.METRO_RAW_MONGO_COLLECTION
-    PRO_COLLECTION = Settings.METRO_PRO_MONGO_COLLECTION
+    RAW_COLLECTION = Settings.THESTAR_RAW_MONGO_COLLECTION
+    PRO_COLLECTION = Settings.THESTAR_PRO_MONGO_COLLECTION
     client = pymongo.MongoClient(MONGO_URI)
     db = client[MONGO_DB]
     raw_coll = db[RAW_COLLECTION]
@@ -22,22 +26,23 @@ def updater_processing_harianmetro():
         raw_dict = j.copy()
         
         try:
-            pro_dict = Processing_HarianMetro(raw_dict).pro.copy()
-
+            pro_dict = Processing_TheStar(raw_dict).pro.copy()
+            
+            # Insert processed dict to processed collection
+            pro_coll.insert_one(pro_dict)
+            
             # Update raw collection with processed_date
             update = { "$set": { "processed_date": datetime.datetime.today() } }
             raw_coll.update_one(j, update)
 
-            # Insert processed dict to processed collection
-            pro_coll.insert_one(pro_dict)
         except Exception as err:
             print("Error at processing:", raw_dict.get("url"))
             print(err)
             
-    print("Done: Processing HarianMetro.", len(x))
+    print("Done: Processing TheStar.", len(x))
 
 
-class Processing_HarianMetro:
+class Processing_TheStar:
     '''
     This class takes in a dictionary from mongodb News collection and parse the 
     content into a formatted json to be used for the rest API
@@ -65,13 +70,20 @@ class Processing_HarianMetro:
         ## Done by default
         
         # 2. news_date
-        date_0 = soup.find("div", "published-date").get_text()
-        date_1 = date_0.split(": ")[1].split(", ")[1]
-        news_date = datetime.datetime.strptime(date_1, "%d %B %Y @ %I:%M %p")
+        dd = soup.find("p", "date").get_text().strip().split(",")[1].strip()
+        tt_soup = soup.find("time", "timestamp")
+        if tt_soup is not None:
+            tt = tt_soup.get_text().split(" MYT")[0]
+            dt_str = dd + " " + tt
+            news_date = datetime.datetime.strptime(dt_str, "%d %b %Y %I:%M %p")
+        else:
+            news_date = datetime.datetime.strptime(dd, "%d %b %Y")
+            
         self.pro["news_date"] = news_date
+            
         
         # 3. title
-        title = soup.find("h1", "page-header").get_text()
+        title = soup.find("div", "headline story-pg").find("h1").get_text().strip()
         self.pro["title"] = title
         
         # 4. category (News, or FakeNewsAlert)
@@ -83,17 +95,22 @@ class Processing_HarianMetro:
         self.pro["topic"] = topic
         
         # 6. content_text
-        text_list = [j.get_text() for j in soup.find("div", "field-item even").find_all("p")]
-        text_list = [j for j in text_list if j != ""]
-        content_text = " ".join(text_list)
+        z = soup.find("div", "story")
+        _ = [x.extract() for x in z.findAll('script')]
+        content_text = z.get_text().strip().replace("\n", "")
         self.pro["content_text"] = content_text
         
         # 7. image: list:{src, caption}
-        if soup.find("img") is not None:
-            src = soup.find("img").get("src")
-            caption = soup.find("img").get("alt")
+        soup_img = soup.find("div", "story-image")
+        if soup_img.find("img") is not None:
+            src = soup_img.find("img").get("src")
+            caption = soup_img.find("p", "caption")
+            if caption is not None:
+                caption = caption.get_text()
             image = [{"src": src, "caption": caption}]
-            self.pro["image"] = image
+        else:
+            image = []
+        self.pro["image"] = image
         
         # 8. audio: list:{src, caption}
         audio = []
@@ -102,7 +119,7 @@ class Processing_HarianMetro:
         ### PING IF FOUND!
         if soup.find("audio") is not None:
             print("======================")
-            print("Harian Metro: FOUND AUDIO...")
+            print("TheStar: FOUND AUDIO...")
             print("URL:", self.raw.get("url"))
             print("======================")
             
@@ -130,14 +147,4 @@ class Processing_HarianMetro:
         processed_date = datetime.datetime.today()
         self.pro["processed_date"] = processed_date
         
-        
-
-        
-        
-
-        
-        
-        
-
-
-    
+         

@@ -10,8 +10,6 @@ from scrapy.exceptions import DontCloseSpider, CloseSpider
 from helper import check_to_scrap
 from settings import Settings
 
-
-    
 class SebenarnyaSpider(scrapy.Spider):
     name = 'sebenarnya' #v2
     start_urls = ['https://sebenarnya.my/category/novel-coronavirus-2019-ncov/']

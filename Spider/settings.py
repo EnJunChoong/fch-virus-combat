@@ -10,9 +10,9 @@ class Settings():
     SEBENARNYA_RAW_MONGO_COLLECTION = "sebenarnya_raw"
     SEBENARNYA_PRO_MONGO_COLLECTION = "sebenarnya_pro"  
     
-    THESTAR_RAW_MONGO_COLLECTION = "thestar_v1_covid"
+    THESTAR_RAW_MONGO_COLLECTION = "thestar_raw"
     THESTAR_PRO_MONGO_COLLECTION = "thestar_pro"  
     
-    METRO_RAW_MONGO_COLLECTION = "hmetro_v1_covid"
+    METRO_RAW_MONGO_COLLECTION = "hmetro_raw"
     METRO_PRO_MONGO_COLLECTION = "hmetro_pro"  
     
