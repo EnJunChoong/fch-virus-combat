@@ -32,19 +32,64 @@
     
     <div class="row center-text">
         <div class="two columns"></div>
-        <div class="left-text eight columns output">Search results for: {{dp.get("keyword")}} </div>
+        <div class="left-text eight columns output">Search results for: {{ keyword }} </div>
         <div class="two columns"></div>
     </div>
-      
-    {%for i in range(dp.get("result_len"))%} 
+    
     <div class="row center-text">
         <div class="two columns"></div>
-        <div class="left-text eight columns output"> 
-            <a href={{ dp.get("result")[i]["url"] }}> {{ dp.get("result")[i]["title"] }} </a>
-        </div>
+        <div class="left-text eight columns output"> {{ pred.get("header") }}</div>
         <div class="two columns"></div>
     </div>
-    {%endfor%}
+    <div class="row center-text">
+        <div class="two columns"></div>
+        <div class="left-text eight columns output"> {{ pred.get("caption") }}</div>
+        <div class="two columns"></div>
+    </div>
+    
+      <br>
+      
+    {% if n_fna > 0%} 
+    <div class="row center-text">
+        <div class="two columns"></div>
+        <h5 class="left-text eight columns output">Fake News Alert:</h5>
+        <div class="two columns"></div>
+        
+        {% for i in range(n_fna) %}
+        <div class="two columns"></div>
+        <h5 class="left-text eight columns output">{{ddf_fna[i].get("source")}}</h5>
+        <div class="two columns"></div>
+            {% for j in range(3) %}
+            <div class="two columns"></div>
+            <div class="left-text eight columns output"> 
+                <a href={{ ddf_fna[i].get("df")["url"].values[j] }}> {{ ddf_fna[i].get("df")["title"].values[j] }} </a>
+            </div>
+            <div class="two columns">{{ ddf_fna[i].get("df")["score"].values[j] }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+      
+    {% if n_news > 0%} 
+    <div class="row center-text">
+        <div class="two columns"></div>
+        <h5 class="left-text eight columns output">Verified News:</h5>
+        <div class="two columns"></div>
+        
+        {% for i in range(n_news) %}
+        <div class="two columns"></div>
+        <h5 class="left-text eight columns output">{{ddf_news[i].get("source")}}</h5>
+        <div class="two columns"></div>
+            {% for j in range(3) %}
+            <div class="two columns"></div>
+            <div class="left-text eight columns output"> 
+                <a href={{ ddf_news[i].get("df")["url"].values[j] }}> {{ ddf_news[i].get("df")["title"].values[j] }} </a>
+            </div>
+            <div class="two columns">{{ ddf_news[i].get("df")["score"].values[j] }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
       
     <script src="js/extention/choices.js"></script>
   </body><!-- This templates was made by Colorlib (https://colorlib.com) -->

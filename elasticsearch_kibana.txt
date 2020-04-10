@@ -1,0 +1,13 @@
+elasticsearch is setup on port 9200
+Should auto start when restart else use command below:
+sudo -i service elasticsearch start
+or stop
+sudo -i service elasticsearch stop
+
+
+
+kibana is setup on port 5610
+Should auto start when restart else use command below:
+sudo -i service kibana start
+or stop
+sudo -i service kibana stop

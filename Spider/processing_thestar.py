@@ -10,30 +10,40 @@ import datetime
 from bs4 import BeautifulSoup
 from dateutil import parser
 from settings import Settings
+from elasticsearch import Elasticsearch
 
 def updater_processing_thestar():
     MONGO_URI = Settings.MONGO_URI
     MONGO_DB = Settings.MONGO_DB
     RAW_COLLECTION = Settings.THESTAR_RAW_MONGO_COLLECTION
-    PRO_COLLECTION = Settings.THESTAR_PRO_MONGO_COLLECTION
     client = pymongo.MongoClient(MONGO_URI)
     db = client[MONGO_DB]
     raw_coll = db[RAW_COLLECTION]
-    pro_coll = db[PRO_COLLECTION]
     
-    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(300))
+    ES_URI = Settings.ES_URI
+    ES_INDEX_NAME = Settings.ES_INDEX_NAME
+    es_conn = Elasticsearch(ES_URI)
+    
+    if not es_conn.indices.exists(index=ES_INDEX_NAME):
+        es_conn.indices.create(index=ES_INDEX_NAME, ignore=400)
+    
+    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(500))
     for j in x:
         raw_dict = j.copy()
         
         try:
             pro_dict = Processing_TheStar(raw_dict).pro.copy()
             
-            # Insert processed dict to processed collection
-            pro_coll.insert_one(pro_dict)
-            
             # Update raw collection with processed_date
             update = { "$set": { "processed_date": datetime.datetime.today() } }
             raw_coll.update_one(j, update)
+
+            # Insert processed dict to processed collection
+            # pro_coll.insert_one(pro_dict)
+            print(f'processing {pro_dict["url"]}')
+            doc_id = str(pro_dict['_id'])
+            del pro_dict['_id']
+            es_conn.create(index=ES_INDEX_NAME, body=pro_dict, id=doc_id)
 
         except Exception as err:
             print("Error at processing:", raw_dict.get("url"))
@@ -124,7 +134,7 @@ class Processing_TheStar:
             print("======================")
             
         # 9. fact_src (NA if not fake news alert category)
-        ## Done by default
+        self.pro["fact_src"] = []
         
         # 10. label (4 for actual reported news)
         label = 4

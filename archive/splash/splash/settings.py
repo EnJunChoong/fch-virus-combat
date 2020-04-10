@@ -19,6 +19,7 @@ MONGO_URI = "localhost:27017"
 MONGO_DATABASE = "news"
 THESTAR_COLLECTION_FAKE = "thestar_v1_test1"
 THESTAR_COLLECTION_COVID = "thestar_v1_covid"
+HMETRO_COLLECTION_COVID = "hmetro_v1_covid"
 
 #ScrapySplash settings
 # SPLASH_URL = 'http://127.0.0.1:8050'
@@ -82,9 +83,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'splash.pipelines.SplashPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'splash.pipelines.SplashPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

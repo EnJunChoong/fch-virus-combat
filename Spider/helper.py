@@ -1,5 +1,5 @@
 import pymongo
-
+import pandas as pd
 def check_to_scrap(url, coll):
     x = coll.find_one({'url': url}, { "_id": 1})
     if x is None:

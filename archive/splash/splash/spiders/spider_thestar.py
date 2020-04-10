@@ -8,7 +8,8 @@ class NewsSpider(scrapy.Spider):
     domain = 'https://www.thestar.com.my'
     MONGO_URI = "localhost:27017"
     MONGO_DATABASE = "news"
-    THESTAR_COLLECTION_COVID = "thestar_v1_covid"
+    THESTAR_COLLECTION_COVID = "thestar_v1_covid_test1"
+    
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
         spider = super(NewsSpider, cls).from_crawler(crawler, *args, **kwargs)

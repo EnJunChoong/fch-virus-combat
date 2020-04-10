@@ -6,10 +6,11 @@ import numpy as np
 import requests
 import collections
 import time
-from datetime import datetime
+import datetime
 from bs4 import BeautifulSoup
 from dateutil import parser
 from settings import Settings
+from elasticsearch import Elasticsearch
 
 # 'dep_content_text': response.css('div.td-post-content p::text').getall(), #deprecated
 # 'dep_img_src': response.css('div.td-post-content img::attr(src)').getall() #deprecated
@@ -18,13 +19,18 @@ def updater_processing_sebenarnya():
     MONGO_URI = Settings.MONGO_URI
     MONGO_DB = Settings.MONGO_DB
     RAW_COLLECTION = Settings.SEBENARNYA_RAW_MONGO_COLLECTION
-    PRO_COLLECTION = Settings.SEBENARNYA_PRO_MONGO_COLLECTION
     client = pymongo.MongoClient(MONGO_URI)
     db = client[MONGO_DB]
     raw_coll = db[RAW_COLLECTION]
-    pro_coll = db[PRO_COLLECTION]
     
-    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(300))
+    ES_URI = Settings.ES_URI
+    ES_INDEX_NAME = Settings.ES_INDEX_NAME
+    es_conn = Elasticsearch(ES_URI)
+    
+    if not es_conn.indices.exists(index=ES_INDEX_NAME):
+        es_conn.indices.create(index=ES_INDEX_NAME, ignore=400)
+    
+    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(500))
     for j in x:
         raw_dict = j.copy()
         
@@ -36,7 +42,11 @@ def updater_processing_sebenarnya():
             raw_coll.update_one(j, update)
 
             # Insert processed dict to processed collection
-            pro_coll.insert_one(pro_dict)
+            # pro_coll.insert_one(pro_dict)
+            print(f'processing {pro_dict["url"]}')
+            doc_id = str(pro_dict['_id'])
+            del pro_dict['_id']
+            es_conn.create(index=ES_INDEX_NAME, body=pro_dict, id=doc_id)
             
         except Exception as err:
             print("Error at processing:", raw_dict.get("url"))
@@ -189,4 +199,4 @@ class Processing_Sebenarnya:
         ## Done by default
         
         # 15. processed_date
-        self.pro["processed_date"] = datetime.today()
+        self.pro["processed_date"] = datetime.datetime.today()

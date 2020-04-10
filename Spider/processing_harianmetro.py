@@ -6,18 +6,26 @@ import time
 import datetime
 from bs4 import BeautifulSoup
 from settings import Settings
+from elasticsearch import Elasticsearch
+
 
 def updater_processing_harianmetro():
     MONGO_URI = Settings.MONGO_URI
     MONGO_DB = Settings.MONGO_DB
     RAW_COLLECTION = Settings.METRO_RAW_MONGO_COLLECTION
-    PRO_COLLECTION = Settings.METRO_PRO_MONGO_COLLECTION
     client = pymongo.MongoClient(MONGO_URI)
     db = client[MONGO_DB]
     raw_coll = db[RAW_COLLECTION]
-    pro_coll = db[PRO_COLLECTION]
+    # pro_coll = db[PRO_COLLECTION]
     
-    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(300))
+    ES_URI = Settings.ES_URI
+    ES_INDEX_NAME = Settings.ES_INDEX_NAME
+    es_conn = Elasticsearch(ES_URI)
+    
+    if not es_conn.indices.exists(index=ES_INDEX_NAME):
+        es_conn.indices.create(index=ES_INDEX_NAME, ignore=400)
+    
+    x = list(raw_coll.find({"processed_date": {"$exists": 0}}).limit(500))
     for j in x:
         raw_dict = j.copy()
         
@@ -29,7 +37,12 @@ def updater_processing_harianmetro():
             raw_coll.update_one(j, update)
 
             # Insert processed dict to processed collection
-            pro_coll.insert_one(pro_dict)
+            # pro_coll.insert_one(pro_dict)
+            print(f'processing {pro_dict["url"]}')
+            doc_id = str(pro_dict['_id'])
+            del pro_dict['_id']
+            es_conn.create(index=ES_INDEX_NAME, body=pro_dict, id=doc_id)
+            
         except Exception as err:
             print("Error at processing:", raw_dict.get("url"))
             print(err)
@@ -107,7 +120,7 @@ class Processing_HarianMetro:
             print("======================")
             
         # 9. fact_src (NA if not fake news alert category)
-        ## Done by default
+        self.pro["fact_src"] = []
         
         # 10. label (4 for actual reported news)
         label = 4
