@@ -1,0 +1,55 @@
+
+{% for i in range(2): %}
+
+    {% if n[i] > 0 %} 
+    <div class="padding"></div>
+    <div class="container">
+        <div class="row">
+            
+            <div class="one column"></div>
+            
+            {% if i == 0%}
+            <div class="ten columns news-container-0">
+            {% endif %}
+
+            {% if i == 1%}
+            <div class="ten columns news-container-1">
+            {% endif %}
+
+            {% if i == 0%}
+            <div class="title-0">{{ title[i] }}</div>
+            {% endif %}
+
+            {% if i == 1%}
+            <div class="title-1">{{ title[i] }}</div>
+            {% endif %}
+
+
+            {% for j in range(n[i]) %}
+
+            <div class="output bold-text">{{ ddf[i][j].get("source") }}</div>
+
+
+                {% for k in range(ddf[i][j].get("df").shape[0]) %}
+                <div class="output"> 
+                    <i class="fas fa-circle" style={{ ddf[i][j].get("df")["color"].values[k] }}></i> 
+                    <a href={{ ddf[i][j].get("df")["url"].values[k] }}>
+                        {{ ddf[i][j].get("df")["title"].values[k] }}
+                    </a>
+                </div>
+<!--                 <div class="">{{ ddf[i][j].get("df")["score"].values[k] }}</div> -->
+                {% endfor %}
+
+            {% endfor %}
+
+            </div>
+    
+            <div class="one column"></div>
+        </div>
+    </div>
+    <div class="padding"></div>
+    {% endif %}    
+
+{% endfor %}
+    
+    

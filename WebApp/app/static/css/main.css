@@ -1,3 +1,58 @@
+.bold-text{
+    font-weight: bold;
+}
+
+
+.padding{
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+.news-container-0{
+    padding-top: 0.70em;
+    padding-bottom: 0.70em;
+    border-top: 0.1em solid #8B0000;
+    border-bottom: 0.1em solid #8B0000;
+}
+
+.news-container-1{
+    padding-top: 0.70em;
+    padding-bottom: 0.70em;
+    border-top: 0.1em solid #006400;
+    border-bottom: 0.1em solid #006400;
+}
+
+
+
+.pred-container{
+    border-top: 0.15em solid grey;
+    border-bottom: 0.15em solid grey;
+}
+
+.pred-container-margin{
+    padding-top: 0.70em;
+    padding-bottom: 0.70em;
+    
+}
+
+.title-0{
+    text-align: center;
+    font-weight: bold;
+    color: #B22222;
+}
+
+.title-1{
+    text-align: center;
+    font-weight: bold;
+    color: #228B22;
+}
+
+
+
+.prediction{
+    font-size: 1em;
+}
+
 .center-text{
     text-align: center;
 }

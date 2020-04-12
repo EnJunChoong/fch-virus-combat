@@ -59,7 +59,7 @@
         <div class="two columns"></div>
         <h5 class="left-text eight columns output">{{ddf_fna[i].get("source")}}</h5>
         <div class="two columns"></div>
-            {% for j in range(3) %}
+            {% for j in range(ddf_fna[i].get("df").shape[0]) %}
             <div class="two columns"></div>
             <div class="left-text eight columns output"> 
                 <a href={{ ddf_fna[i].get("df")["url"].values[j] }}> {{ ddf_fna[i].get("df")["title"].values[j] }} </a>
@@ -80,7 +80,7 @@
         <div class="two columns"></div>
         <h5 class="left-text eight columns output">{{ddf_news[i].get("source")}}</h5>
         <div class="two columns"></div>
-            {% for j in range(3) %}
+            {% for j in range(ddf_news[i].get("df").shape[0]) %}
             <div class="two columns"></div>
             <div class="left-text eight columns output"> 
                 <a href={{ ddf_news[i].get("df")["url"].values[j] }}> {{ ddf_news[i].get("df")["title"].values[j] }} </a>

@@ -69,9 +69,8 @@ def index():
 def get_search():
     return redirect("/")
 
-@app.route("/search", methods=['POST'])
+@app.route("/search_old", methods=['POST'])
 def results():
-    print(request.form)
     dp = request.form
     dp2 = {}
     if dp is not None:
@@ -80,7 +79,7 @@ def results():
         result_dict = search(keyword)
         
         # search
-        r = search(keyword)
+        r = search(keyword, index="all_news")
         ddf_fna, n_fna, mscore_fna = get_top_news(r, category = "FakeNewsAlert")
         ddf_news, n_news, mscore_news = get_top_news(r, category = "News")
         idx = predict(n_fna, n_news, mscore_fna, mscore_news)
@@ -96,3 +95,44 @@ def results():
                                pred = pred
                               )
     
+@app.route("/search", methods=['GET', 'POST'])
+def results2():
+    dp = request.form
+    dp2 = {}
+    if dp is not None:
+        keyword = dp.get("keyword")
+        dp2["keyword"] = keyword
+        
+        # search
+        r = search(keyword, index = "all_news")
+        ddf_fna, n_fna, mscore_fna = get_top_news(r, category = "FakeNewsAlert")
+        ddf_news, n_news, mscore_news = get_top_news(r, category = "News")
+        
+        show_result = 1
+        if keyword is None or keyword.strip() == "":
+            show_result = 0
+            
+        n = [n_fna, n_news]
+        ddf = [ddf_fna, ddf_news]
+        title = ["Fake News Alert", "Verified News"]
+            
+        idx = predict(n_fna, n_news, mscore_fna, mscore_news)
+        pred = Prediction[idx]
+        
+        # assign to render
+#         dp2["ddf_fna"] = ddf_fna
+        
+        return render_template('search2.html', dp = dp2, 
+                               keyword = keyword,
+                               n = n,
+                               ddf = ddf,
+                               title = title,
+                               show_result = show_result,
+#                                n_fna = n_fna, n_news = n_news,
+#                                ddf_fna = ddf_fna, ddf_news = ddf_news,
+                               pred = pred
+                              )
+    
+@app.route("/monitor", methods = ['GET'])
+def monitor():
+    return render_template('monitor.html')

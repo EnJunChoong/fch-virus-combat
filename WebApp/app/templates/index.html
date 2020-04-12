@@ -10,26 +10,10 @@
     <link href="{{ url_for('static', filename='css/skeleton.css') }}"  rel="stylesheet" />
   </head>
   <body class="code-snippets-visible">
-    <div class="container">
-        <section class="header">
-<!--             UniJagung Fake News  -->
-            <h2 class="title center-text">Search Engine </h2>
-        </section>
-    </div>
-      
-    <form action="/search" method="post">
-    <div class="container">
-        <div class="row">
-            <input class="u-full-width" id="search" name="keyword" type="text" placeholder="Keywords/title/URL of news" />
-        </div>
-        <div class="row center-text">
-            <button class="button-primary" type="submit">SEARCH</button>
-            <button class="button-primary" type="submit">URL SEARCH</button>
-        </div>
-    </div>
-    </form>
+        
+    {% include 'header_section.html' %} 
+    {% include 'search_section.html' %} 
 
-    
     <script src="js/extention/choices.js"></script>
   </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/main.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/normalize.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/skeleton.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='fa/css/all.css') }}"  rel="stylesheet" />
+  </head>
+  <body class="code-snippets-visible">
+    
+    {% include 'header_section.html' %} 
+    {% include 'search_section.html' %} 
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="one column"></div>
+            <div class="left-text ten columns output">
+                <span>Search results for: </span><span class="bold-text"> {{ keyword }} </span>
+            </div>
+            <div class="one column"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="one column"></div>
+        <div class="pred-container ten columns">
+            <div class="row center-text">
+                <div class="bold-text output"> {{ pred.get("header") }}</div>
+            </div>
+            <div class="row center-text ">
+                <div class="output"> {{ pred.get("caption") }}</div>
+            </div>
+        </div>
+        <div class="one column"></div>
+    </div>
+    
+    {% include 'result_section.html' %} 
+      
+    <script src="js/extention/choices.js"></script>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>

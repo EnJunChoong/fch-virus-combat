@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/main.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/normalize.css') }}"  rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/skeleton.css') }}"  rel="stylesheet" />
+  </head>
+    
+  <body class="code-snippets-visible">
+    <div class="container">
+        <section class="header">
+<!--             UniJagung Fake News  -->
+            <h2 class="title center-text">Admin Monitoring Dashboard</h2>
+        </section>
+    </div>
+    
+    <div class="container">
+        <div class="two columns"></div>
+        <div class="eight columns">
+            <iframe src="http://128.199.71.7:5601/app/kibana#/visualize/edit/f99f4d50-7b48-11ea-b349-2df303269a23?embed=true&_g=(refreshInterval:(pause:!t,value:0),time:(from:'2020-02-21T12:14:11.460Z',to:now))&_a=(filters:!(),linked:!f,query:(language:kuery,query:''),uiState:(),vis:(aggs:!((enabled:!t,id:'1',params:(),schema:metric,type:count),(enabled:!t,id:'2',params:(drop_partials:!f,extended_bounds:(),field:news_date,interval:auto,min_doc_count:1,scaleMetricValues:!f,useNormalizedEsInterval:!t),schema:segment,type:date_histogram)),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,categoryAxes:!((id:CategoryAxis-1,labels:(filter:!t,show:!t,truncate:100),position:bottom,scale:(type:linear),show:!t,style:(),title:(),type:category)),dimensions:(x:!n,y:!((accessor:0,aggType:count,format:(id:number),label:Count,params:()))),grid:(categoryLines:!f),labels:(show:!f),legendPosition:right,seriesParams:!((data:(id:'1',label:Count),drawLinesBetweenPoints:!t,lineWidth:2,mode:stacked,show:!t,showCircles:!t,type:histogram,valueAxis:ValueAxis-1)),thresholdLine:(color:%23E7664C,show:!f,style:full,value:10,width:1),times:!(),type:histogram,valueAxes:!((id:ValueAxis-1,labels:(filter:!f,rotate:0,show:!t,truncate:100),name:LeftAxis-1,position:left,scale:(mode:normal,type:linear),show:!t,style:(),title:(text:Count),type:value))),title:histogram,type:histogram))" height="600" width="800"></iframe>
+        </div>
+        <div class="two columns"></div>
+    </div>
+    <div class="container">
+        <div class="two columns"></div>
+        <div class="eight columns">
+              <iframe src="http://128.199.71.7:5601/goto/af16853e5f1a4dd1de00da286a720720?embed=true" height="600" width="800"></iframe>
+        </div>
+        <div class="two columns"></div>
+    </div>
+      
+    
+      
+    <script src="js/extention/choices.js"></script>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
