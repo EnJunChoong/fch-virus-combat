@@ -8,13 +8,21 @@
 2. Cheah Jun Yitt
     - Github: <https://github.com/junyitt/>
 
+## Presentation Slides, Pitch and Web App
+1. [Slides](https://docs.google.com/presentation/d/1-SKUOr6jdPtzyyujNData0-Gf4s8PiTCxJgpfb3bCuc)
+2. [Pitch](https://youtu.be/TXFyflu78lY )
+3. [FFA web app](<http://facts4all.ml>)
+
   
 ![Facts for All (FFA)](FFA_App/app/static/images/full_logo.png)
+
+
+
 ### A fact check app to combat COVID-19 related fake news
 The trend is rising for fake news creation. With the rise of DeepFake (Generative AI) etc., anyone can create increasingly realistic fake content and spread them.  
 
 [Example of Fake News: 1](https://sebenarnya.my/tiada-kenyataan-bahawa-kelab-golf-dibenarkan-dibuka-semasa-pkp/)  
-For example, someone spreading misinformation that certain area is no longer under Movement Control Order (MCO) may inhibit the effectiveness to contain the spread of the virus 
+For example, someone spreading misinformation that certain area is no longer under Movement Control Order (MCO) may inhibit the effectiveness to contain the spread of the virus.
 
 [Example of Fake News: 2](https://sebenarnya.my/stok-beras-negara-hanya-mampu-bertahan-selama-2-5-bulan-adalah-tidak-benar/)  
 Misinformation about diminishing food supplies in the country may cause widespread panic buying.
