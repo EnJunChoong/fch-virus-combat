@@ -11,23 +11,23 @@ from scrapy_splash import SplashRequest
 from helper import check_to_scrap
 from settings import Settings
 
-class HarianMetroSpider(scrapy.Spider):
-    name = "HarianMetro"
-    domain = 'https://www.hmetro.com.my'
+class BeritaHarianSpider(scrapy.Spider):
+    name = "BeritaHarian"
+    domain = 'https://www.bharian.com.my'
     MONGO_URI = Settings.MONGO_URI
     MONGO_DATABASE = Settings.MONGO_DB
-    HMETRO_COLLECTION_COVID = Settings.METRO_RAW_MONGO_COLLECTION
+    BHARIAN_COLLECTION_COVID = Settings.BHARIAN_RAW_MONGO_COLLECTION
     
     check_pg = 0
     MAX_CHECK_PAGE = 3
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        spider = super(HarianMetroSpider, cls).from_crawler(crawler, *args, **kwargs)
+        spider = super(BeritaHarianSpider, cls).from_crawler(crawler, *args, **kwargs)
         
         cls.mongo_uri=cls.MONGO_URI
         cls.mongo_db=cls.MONGO_DATABASE
-        cls.collection_name = cls.HMETRO_COLLECTION_COVID
+        cls.collection_name = cls.BHARIAN_COLLECTION_COVID
         
         cls.client = pymongo.MongoClient(cls.mongo_uri)
         cls.coll = cls.client[cls.mongo_db][cls.collection_name]
@@ -36,20 +36,22 @@ class HarianMetroSpider(scrapy.Spider):
     
     def start_requests(self):     
         urls = [
-            'https://www.hmetro.com.my/search?s=koronavirus'
+            'https://www.bharian.com.my/search?s=covid'
         ]
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse_links)    
     
     def parse_links(self, response):
-        body = response.css('div.view-content')
+        body = response.css('div.region-content div.block-content')
         articles = body.css('div.views-field-title')
         article_links = [self.domain+article.css('a::attr(href)').get() 
                          for article in articles
                          if len(article.css('a::attr(href)').get()) > 0
                         ]
+        
         article_links_filtered = [j for j in article_links if check_to_scrap(j, self.coll)]
+        print(article_links_filtered)
         if len(article_links_filtered) == 0:
             self.check_pg += 1
             if self.check_pg >= self.MAX_CHECK_PAGE:
@@ -60,7 +62,7 @@ class HarianMetroSpider(scrapy.Spider):
         paginationlink = response.css('li.pager-next a::attr(href)').getall()
  
         if len(paginationlink) > 0:
-            page = paginationlink[0][paginationlink[0].find('page'):]
+            page = paginationlink[0]
             nextlink = self.domain+'/search?s=koronavirus&'+ page
             print('############')
             print(nextlink)
@@ -70,19 +72,22 @@ class HarianMetroSpider(scrapy.Spider):
 
     def parse_news(self, response):
         time.sleep(1)
-        body = response.css('section.col-md-9.col-sm-8').get()
+        
+        body = response.css('section.col-sm-8').get()
+        body = body[:body.find('div class="region region-content-bottom">')]
+        date_raw = response.css('div.node-meta::text').get()
         linkname = os.path.basename(response.url)
         filename = linkname+'.html'
         url = response.url        
         
         result_dict = {
             'scrape_date': datetime.datetime.today(),
-            'news_date': '',
+            'news_date': date_raw,
             'title': '',
             'category': '',
             'topic': '',
             'content_text': '',
-            'image': [],
+            'images': [],
             'audio': [],
             'fact_src': '',
             'label': '',

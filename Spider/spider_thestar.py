@@ -1,4 +1,5 @@
 import os
+import re
 import time
 import datetime
 import pymongo
@@ -69,9 +70,13 @@ class TheStarSpider(scrapy.Spider):
         body = response.css('div.sub-section-list')
         articles = body.css('div.row.list-listing')
         article_links = [article.css('h2.f18').css('a::attr(href)').get() for article in articles]
+        article_links = [self.domain+url.replace(self.domain,"") for url in article_links]
+        
+        print(article_links[:10])
         article_links_filtered = [j for j in article_links if check_to_scrap(j, self.coll)]
         print("Filtered total:")
         print(len(article_links_filtered))
+        print(article_links_filtered[:10])
         if len(article_links_filtered) == 0:
             raise CloseSpider 
 
@@ -79,7 +84,7 @@ class TheStarSpider(scrapy.Spider):
         # yield from response.follow_all(article_links[:3], self.parse_news)
         for url in article_links_filtered:
             yield SplashRequest(
-                url=self.domain+url, callback=self.parse_news,
+                url=url, callback=self.parse_news,
                 args = {
                     'wait': 2,
                     'timeout' : 89
@@ -101,7 +106,7 @@ class TheStarSpider(scrapy.Spider):
         
         result_dict = {
             'scrape_date': datetime.datetime.today(),
-            'news_date': '',
+            'news_date': ,
             'title': '',
             'category': '',
             'topic': '',
@@ -117,4 +122,4 @@ class TheStarSpider(scrapy.Spider):
             'meta_full_html': response.text
         }
         
-        self.coll.insert_one(result_dict)
+        # self.coll.insert_one(result_dict)

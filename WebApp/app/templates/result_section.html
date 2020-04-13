@@ -32,7 +32,9 @@
 
                 {% for k in range(ddf[i][j].get("df").shape[0]) %}
                 <div class="output"> 
-                    <i class="fas fa-circle" style={{ ddf[i][j].get("df")["color"].values[k] }}></i> 
+                    <i class="fas fa-circle tooltip" style={{ ddf[i][j].get("df")["color"].values[k] }}>
+                        <span class="tooltiptext">{{ ddf[i][j].get("df")["hover"].values[k] }}</span>
+                    </i> 
                     <a href={{ ddf[i][j].get("df")["url"].values[k] }}>
                         {{ ddf[i][j].get("df")["title"].values[k] }}
                     </a>

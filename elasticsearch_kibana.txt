@@ -6,8 +6,7 @@ sudo -i service elasticsearch stop
 
 
 
-kibana is setup on port 5610
-Should auto start when restart else use command below:
-sudo -i service kibana start
+kibana is setup on port 5601
+Should auto start when restart else use command below:ki
 or stop
 sudo -i service kibana stop

@@ -63,7 +63,7 @@ def mongo_search(keyword):
 @app.route("/", methods=['GET'])
 def index():
     dp = {}  
-    return render_template('index.html', dp = dp)
+    return render_template('index.html', dp = dp, text_logo = False)
   
 @app.route("/search", methods=['GET'])
 def get_search():
@@ -128,6 +128,7 @@ def results2():
                                ddf = ddf,
                                title = title,
                                show_result = show_result,
+                               text_logo = True,
 #                                n_fna = n_fna, n_news = n_news,
 #                                ddf_fna = ddf_fna, ddf_news = ddf_news,
                                pred = pred

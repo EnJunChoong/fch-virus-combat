@@ -1,21 +1,43 @@
-<div class="container">
-    
-    
-    <div class="one column"></div>
-    <div class="ten columns">
-        <div class="header">
-<!--             UniJagung Fake News  -->
-        <h4 class="title center-text">Search Engine </h4>
+<div class="container margin-neg-bot">
+    <div class="row">
+        <div class="one column"></div>
+        <div class="ten columns">
+            <div class="row">
+                {% if text_logo %}
+                <div class="center-text">
+                    <a href="/"><img class="text-logo padding-top2" src="{{url_for('static', filename='images/text_logo.png')}}" /></a>
+                </div>
+                <div class="padding"></div>
+                {% else %}
+                <div class="center-text padding-top">
+                    <img class="full-logo" src="{{url_for('static', filename='images/full_logo.png')}}"  />
+                </div>
+                {% endif %}
+            </div>
+
+            <form action="/search" method="post">
+
+            {% if text_logo %}
+            <div class="row">
+                <div class="ten columns">
+                    <input class="u-full-width" id="search" name="keyword" type="text" placeholder="Keywords/title/URL of news" />
+                </div>
+                <div class="two columns center-text">
+                    <button class="button-primary" type="submit">SEARCH</button>
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <input class="u-full-width" id="search" name="keyword" type="text" placeholder="Keywords/title/URL of news" />
+            </div>
+            <div class="row center-text">
+                <button class="button-primary" type="submit">SEARCH</button>
+    <!--             <button class="button-primary" type="submit">URL SEARCH</button> -->
+            </div>
+            {% endif %}   
+
+            </form>
         </div>
-        <form action="/search" method="post">
-        <div class="row">
-            <input class="u-full-width" id="search" name="keyword" type="text" placeholder="Keywords/title/URL of news" />
-        </div>
-        <div class="row center-text">
-            <button class="button-primary" type="submit">SEARCH</button>
-<!--             <button class="button-primary" type="submit">URL SEARCH</button> -->
-        </div>
-        </form>
+        <div class="one column"></div>
     </div>
-    <div class="one column"></div>
 </div>

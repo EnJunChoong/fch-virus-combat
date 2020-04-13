@@ -18,6 +18,46 @@ ns = api.namespace('news', description='Query SEBENARNYA.MY news/articles.')
 # content_fields["PALSU"] = fields.String()
 # content_fields["TIDAK BENAR"] = fields.String()
 
+import datetime 
+from elasticsearch import Elasticsearch
+
+INDEX_NAME = 'all_news'
+ec_conn= Elasticsearch('http://localhost:9200')
+ec_conn
+
+query = {
+    "bool":{  
+         "filter":[  
+             {
+                "multi_match": {"fields": ["title","content_text"], "query": 'sabar'}
+             },
+            {  
+               "terms":{  
+                  "category":[  
+                     "News",
+                  ]
+               }
+            },
+            {  
+               "terms":{  
+                  "topic":[  
+                     "COVID-19",
+                  ]
+               }
+            },
+            {
+                "range": {
+                    "news_date": {"gte": datetime.datetime(2020,4,10), "lte": datetime.datetime(2020,4,12)},
+                },
+            }
+         ]
+    }
+}
+
+# ec_conn.search(index='all_news', body = {"query": query})['hits']['hits'] #[0]['_source'].keys()
+
+
+
 fact_src_fields = api.model('FactSource', {
     'text': fields.String,
     'link': fields.String,

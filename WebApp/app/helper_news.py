@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 from colour import Color
 
-source_mapping = {"TheStar": "The Star", "sebenarnya": "SEBENARNYA.MY", "HarianMetro": "Harian Metro"}
+source_mapping = {"TheStar": "The Star", "sebenarnya": "SEBENARNYA.MY", "HarianMetro": "Harian Metro", "BeritaHarian": "Berita Harian"}
 
 def get_colors_red_green(val = 0):
     max_idx = 20
@@ -14,11 +14,23 @@ def get_colors_red_green(val = 0):
 def convert_color(score, maxx = 20):
     flat_score = min(score/maxx,1)
     style = str("color:") + get_colors_red_green(flat_score)
+    
     return style
     
-def search(keyword, max_results = 10, index = "my_index"):
-    result = requests.get(f"http://localhost:9200/{index}/_search?q={keyword}")
-    x = result.json().get("hits").get("hits")[0:max_results]
+def get_hover_tooltip(score, maxx = 20):
+    flat_score = min(score/maxx,1)
+    hover_tooltip = ""
+    if flat_score > 0.7:
+        hover_tooltip = "Strong match"
+    elif flat_score > 0.5:
+        hover_tooltip = "Average match"
+    else:
+        hover_tooltip = "Weak match"
+    return hover_tooltip
+        
+def search(keyword, max_results = 100, index = "my_index"):
+    result = requests.get(f"http://localhost:9200/{index}/_search?q={keyword}&size={max_results}")
+    x = result.json().get("hits").get("hits") #[0:max_results]
     titles = [j.get("_source").get("title") for j in x]
     urls = [j.get("_source").get("url") for j in x]
     categories = [j.get("_source").get("category") for j in x]
@@ -33,6 +45,7 @@ def get_top_news(r, category = "FakeNewsAlert", top = 3):
     df = pd.DataFrame(r)
     df["source"] = df["source"].replace(source_mapping)
     df["color"] = df["score"].apply(lambda x: convert_color(x))
+    df["hover"] = df["score"].apply(lambda x: get_hover_tooltip(x))
     sdf = df.loc[df["category"] == category].sort_values("score", ascending = False)
     unique_source = sdf["source"].unique()
     num_unique_source = len(unique_source)

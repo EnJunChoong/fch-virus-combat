@@ -1,0 +1,102 @@
+PUT /my_index/_doc/*
+{   
+  "mapping": {
+    "_doc": {
+      "properties": {
+        "audio": {
+          "properties": {
+            "caption": {
+              "type": "text",
+              "analyzer": "standard", 
+              "fields": {
+                "content": {
+                  "type": "text"
+                }
+              }
+            },
+            "src": {
+              "type": "keyword"
+            }
+          }
+        },
+        "category": {
+          "type": "keyword"
+        },
+        "confidence": {
+          "type": "keyword"
+        },
+        "content_text": {
+          "type": "text",
+          "analyzer": "standard", 
+          "fields": {
+            "content": {
+              "type": "text"
+            }
+          }
+        },
+        "fact_src": {
+          "properties": {
+            "link": {
+              "type": "keyword"
+            },
+            "text": {
+              "type": "text",
+              "analyzer": "standard", 
+              "fields": {
+                "content": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "image": {
+          "properties": {
+            "caption": {
+              "type": "text",
+              "analyzer": "standard", 
+              "fields": {
+                "content": {
+                  "type": "text"
+                }
+              }
+            },
+            "src": {
+              "type": "keyword"
+            }
+          }
+        },
+        "label": {
+          "type": "keyword"
+        },
+        "news_date": {
+          "type": "date"
+        },
+        "news_vendor": {
+          "type": "keyword"
+        },
+        "processed_date": {
+          "type": "date"
+        },
+        "scrape_date": {
+          "type": "date"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "standard", 
+          "fields": {
+            "title": {
+                "type": "text"
+            }
+          }
+        },
+        "topic": {
+            "type": "keyword"
+        },
+        "url": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+} 

@@ -1,3 +1,58 @@
+/* .margin-neg-bot{
+    margin-bottom: -3em;
+} */
+
+.padding-top{
+    padding-top: 5em;
+}
+
+.padding-top2{
+    padding-top: 0.5em;
+}
+
+.text-logo{
+    width: 12em;
+}
+
+.full-logo{
+    width: 23em;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 110%;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent black;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+
 .bold-text{
     font-weight: bold;
 }
