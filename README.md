@@ -8,7 +8,8 @@
 2. Cheah Jun Yitt
     - Github: <https://github.com/junyitt/>
 
-# Facts for All (FFA)
+  
+![Facts for All (FFA)](FFA_App/app/static/images/full_logo.png)
 ### A fact check app to combat COVID-19 related fake news
 The trend is rising for fake news creation. With the rise of DeepFake (Generative AI) etc., anyone can create increasingly realistic fake content and spread them.  
 
