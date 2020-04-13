@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 import os 
 import pandas as pd
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
 import pymongo
 import requests
 from .helper_news import search, get_top_news, predict

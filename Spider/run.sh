@@ -1,3 +1,5 @@
+#!/bin/bash
+
 conda activate covid
 
 python run_crawler_sebenarnya.py & python run_processing_sebenarnya.py

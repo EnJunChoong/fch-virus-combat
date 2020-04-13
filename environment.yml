@@ -5,13 +5,22 @@ dependencies:
   - python=3.7
   - pip
   - joblib
-  - pandas
-  - numpy
-  - scikit-learn
   - matplotlib
+  - numpy
+  - pandas
+  - scikit-learn
+  - scrapy
+  - scrapy_flash
   - pip:
-        - jupyterlab
-        - plotly
-        - pymongo
-        - schedule
-        - bs4
+   - bs4
+   - colour
+   - elasticsearch
+   - flask
+   - jupyterlab
+   - plotly
+   - pymongo
+   - requests
+   - schedule
+   
+        
+        
