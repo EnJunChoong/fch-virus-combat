@@ -37,7 +37,7 @@ Hence, there is a need to create a one-stop platform to allow users to quickly v
 ## Start Small, Think Big, Scale Fast
 1. Start Small: Work on Malaysia COVID-19-related news sources, create a database and a simple web app.
 2. Think Big: Aim to create a platform to automatically detect potential fake news, enlighten any potential readers with credible sources. Bring in various parties like government and companies to quickly verify any recent fake news ASAP.
-3. Scale Fast: Scale to other countries, scrap news from various countries and beyond COVID-19 related news, and make the platform an international one.
+3. Scale Fast: Scale to other countries, scrape news from various countries and beyond COVID-19 related news, and make the platform an international one.
 
 ## Dependencies Installation for Ubuntu 18.04
 #### Create conda environment
@@ -79,22 +79,24 @@ sudo apt-get update && sudo apt-get install kibana
         - Ingest the processed data to ElasticSearch index
     - Data Schema (in Json)
         - News: Fields
-                1. scrape_date
-                2. news_date
-                3. title
-                4. category (News, or FakeNewsAlert)
-                5. topic (COVID-19)
-                6. content_text
-                7. image: list:{src, caption}
-                8. audio: list:{src, caption}
-                9. fact_src (NA if not fake news alert category)
-                10. label (4 for actual reported news)
-                11. confidence (4 for actual report news)
-                12. url
-                13. news_vendor
-                14. processed_date
-                15. content_html (raw only)
-                16. meta_full_html (raw only)
+        ```
+            1. scrape_date
+            2. news_date
+            3. title
+            4. category (News, or FakeNewsAlert)
+            5. topic (COVID-19)
+            6. content_text
+            7. image: list:{src, caption}
+            8. audio: list:{src, caption}
+            9. fact_src (NA if not fake news alert category)
+            10. label (4 for actual reported news)
+            11. confidence (4 for actual report news)
+            12. url
+            13. news_vendor
+            14. processed_date
+            15. content_html (raw only)
+            16. meta_full_html (raw only)
+        ```
 3. Query news  -> Output results to FFA Web App (Developed using Flask)
     - Commands in /FFA_App/run.sh will launch the FFA fact checking web app.
     - The web app is currently hosted on our DigitalOcean remote server:
